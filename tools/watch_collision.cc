@@ -20,6 +20,10 @@
 #include <gazebo/gazebo_client.hh>
 
 #include <iostream>
+#include "zmq/zhelpers.hpp"
+
+zmq::context_t context(1);
+zmq::socket_t contacts_publisher(context, ZMQ_PUB);
 
 /////////////////////////////////////////////////
 // Function is called everytime a message is received.
@@ -36,12 +40,21 @@ void cb(ConstContactsPtr &_msg)
           std::cout << i << " th collision2 : " << _msg->contact(i).collision2() << std::endl;
       }
   }
+  std::string buff;
+  _msg->SerializeToString(&buff);
+  s_sendmore(contacts_publisher, "prius_collision");
+  s_send(contacts_publisher, buff);
+
   std::cout << "============================\n";
 }
 
 /////////////////////////////////////////////////
 int main(int _argc, char **_argv)
 {
+
+  contacts_publisher.bind("tcp://127.0.0.1:5566");
+  gzdbg << "ChongPriusPlugin loading params" << std::endl;
+
   // Load gazebo
   gazebo::client::setup(_argc, _argv);
 

@@ -25,4 +25,22 @@ include_directories(${IGNITION-TRANSPORT_INCLUDE_DIRS})
 link_directories(${IGNITION-TRANSPORT_LIBRARY_DIRS})
 
 add_executable(watch_collision watch_collision.cc)
-target_link_libraries(watch_collision ${GAZEBO_LIBRARIES} ${IGNITION-TRANSPORT_LIBRARIES})
+target_link_libraries(watch_collision 
+	${GAZEBO_LIBRARIES} 
+	${IGNITION-TRANSPORT_LIBRARIES}
+	zmq
+	)
+
+add_executable(world_control world_control.cc)
+target_link_libraries(world_control 
+	${GAZEBO_LIBRARIES} 
+	${IGNITION-TRANSPORT_LIBRARIES}
+	zmq
+	)
+
+add_executable(prius_control prius_control.cc)
+target_link_libraries(prius_control 
+	${GAZEBO_LIBRARIES} 
+	${IGNITION-TRANSPORT_LIBRARIES}
+	zmq
+	)

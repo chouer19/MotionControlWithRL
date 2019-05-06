@@ -21,13 +21,15 @@
 using namespace gazebo;
 
 zmq::context_t context(1);
-zmq::socket_t publisher(context, ZMQ_PUB);
+zmq::socket_t pose_publisher(context, ZMQ_PUB);
+zmq::socket_t velocity_publisher(context, ZMQ_PUB);
 
 class gazebo::ChongPriusPluginPrivate
 {
 	public: gazebo::msgs::Vector3d pos;
 	public: gazebo::msgs::Quaternion rot;
-	public:gazebo::msgs::Pose currentPosition;
+	public: gazebo::msgs::Pose currentPosition;
+	public: gazebo::msgs::Vector3d velocity;
   /// \enum DirectionType
   /// \brief Direction selector switch type.
   public: enum DirectionType {
@@ -46,13 +48,10 @@ class gazebo::ChongPriusPluginPrivate
   public: physics::ModelPtr model;
 
   /// \brief Transport node, for gazebo node. gazebo's transport
-  public: transport::NodePtr gznode;
+  public: gazebo::transport::NodePtr gznode;
 
   /// \brief Ignition transport node, for joy node. ignition's transoport
   public: ignition::transport::Node node;
-
-  /// \brief Ignition transport position pub, publish pos
-  public: ignition::transport::Node::Publisher posePub;
 
   /// \brief Ignition transport console pub, publish current console msg
   public: ignition::transport::Node::Publisher consolePub;
@@ -263,9 +262,6 @@ class gazebo::ChongPriusPluginPrivate
   /// \brief Angular velocity of back right wheel at last update (rad/s)
   public: double brWheelAngularVelocity = 0;
 
-  /// \brief Subscriber to the keyboard topic
-  public: transport::SubscriberPtr keyboardSub;
-
   /// \brief Mutex to protect updates
   public: std::mutex mutex;
 
@@ -294,7 +290,8 @@ ChongPriusPlugin::~ChongPriusPlugin()
 /////////////////////////////////////////////////
 void ChongPriusPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
-	publisher.bind("tcp://127.0.0.1:5563");
+  pose_publisher.bind("tcp://127.0.0.1:5563");
+  velocity_publisher.bind("tcp://127.0.0.1:5565");
   gzdbg << "ChongPriusPlugin loading params" << std::endl;
 
   // shortcut to this->dataPtr
@@ -311,8 +308,12 @@ void ChongPriusPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   physicsEngine->SetParam("friction_model", std::string("cone_model"));
 
   // initialize gznode(ignition's transport)
-  this->dataPtr->gznode = transport::NodePtr(new transport::Node());
+  this->dataPtr->gznode = gazebo::transport::NodePtr(new gazebo::transport::Node());
   this->dataPtr->gznode->Init();
+
+  // gznode(gazebo's transport) subcribe world control messages
+  this->dataPtr->worldControlPub =
+    this->dataPtr->gznode->Advertise<msgs::WorldControl>("~/world_control");
 
   // node(ignition's transport) subcribe "/prius/reset" messages
   this->dataPtr->node.Subscribe("/prius/reset",
@@ -330,13 +331,9 @@ void ChongPriusPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   this->dataPtr->node.Subscribe("/cmd_mode",
       &ChongPriusPlugin::OnCmdMode, this);
 
-  // node(ignition's transport) publish "/prius/pose" messages
-  this->dataPtr->posePub = this->dataPtr->node.Advertise<ignition::msgs::Pose>(
-      "/prius/pose");
   // node(ignition's transport) publish "/prius/console" messages
   this->dataPtr->consolePub =
     this->dataPtr->node.Advertise<ignition::msgs::Double_V>("/prius/console");
-
 
   // test for dPtr->model->GetName()
   gzdbg << "dPtr->model->GetName():" << dPtr->model->GetName() << std::endl;
@@ -504,11 +501,13 @@ void ChongPriusPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->dataPtr->minGasFlow = paramDefault;
 
   paramName = "max_speed";
-  paramDefault = 10;
+  paramDefault = 7;
   if (_sdf->HasElement(paramName))
     this->dataPtr->maxSpeed = _sdf->Get<double>(paramName);
   else
     this->dataPtr->maxSpeed = paramDefault;
+
+  //gzdbg << "max speed is : " << this->dataPtr->maxSpeed << std::endl;
 
   paramName = "max_steer";
   paramDefault = 0.6;
@@ -630,9 +629,6 @@ void ChongPriusPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   this->dataPtr->updateConnection = event::Events::ConnectWorldUpdateBegin(
       std::bind(&ChongPriusPlugin::Update, this));
 
-  // gznode(gazebo's transport) subcribe world control messages
-  this->dataPtr->worldControlPub =
-    this->dataPtr->gznode->Advertise<msgs::WorldControl>("~/world_control");
 }
 
 /////////////////////////////////////////////////
@@ -765,7 +761,11 @@ void ChongPriusPlugin::Update()
   /// test for velocity output
   /// gzdbg << "chassis linear velocity is " << dPtr->chassisLinearVelocity.Length() << std::endl;
   // Convert meter/sec to miles/hour
-  double linearVel = dPtr->chassisLinearVelocity.Length() * 2.23694;
+  //double linearVel = dPtr->chassisLinearVelocity.Length() * 2.23694;
+  double linearVel = dPtr->chassisLinearVelocity.Length();
+  this->dataPtr->velocity.set_x(dPtr->chassisLinearVelocity.X());
+  this->dataPtr->velocity.set_y(dPtr->chassisLinearVelocity.Y());
+  this->dataPtr->velocity.set_z(dPtr->chassisLinearVelocity.Z());
 
   // Distance traveled in miles.
   //this->dataPtr->odom += (fabs(linearVel) * dt/3600.0);
@@ -864,8 +864,7 @@ void ChongPriusPlugin::Update()
   }
   else
   {
-    creepPercent = 0.025 * (7 - std::abs(linearVel));
-  }
+    creepPercent = 0.025 * (7 - std::abs(linearVel)); }
   creepPercent = ignition::math::clamp(creepPercent, -0.025, 0.1);
 
   // Gas pedal torque.
@@ -882,23 +881,31 @@ void ChongPriusPlugin::Update()
 
   // Apply equal torque at left and right wheels, which is an implicit model
   // of the differential.
-  if (fabs(dPtr->flWheelAngularVelocity * dPtr->flWheelRadius) <
-      dPtr->maxSpeed &&
-      fabs(dPtr->frWheelAngularVelocity * dPtr->frWheelRadius) <
-      dPtr->maxSpeed)
+  //if (fabs(dPtr->flWheelAngularVelocity * dPtr->flWheelRadius) <
+  //    dPtr->maxSpeed &&
+  //    fabs(dPtr->frWheelAngularVelocity * dPtr->frWheelRadius) <
+  //    dPtr->maxSpeed)
+  //{
+  //  // front torque is a parame reading from sdf
+  //  flGasTorque = gasPercent*dPtr->frontTorque * gasMultiplier;
+  //  frGasTorque = gasPercent*dPtr->frontTorque * gasMultiplier;
+  //}
+  //if (fabs(dPtr->blWheelAngularVelocity * dPtr->blWheelRadius) <
+  //    dPtr->maxSpeed &&
+  //    fabs(dPtr->brWheelAngularVelocity * dPtr->brWheelRadius) <
+  //    dPtr->maxSpeed)
+  //{
+  //  blGasTorque = gasPercent * dPtr->backTorque * gasMultiplier;
+  //  brGasTorque = gasPercent * dPtr->backTorque * gasMultiplier;
+  //}
+
+  if(linearVel < dPtr->maxSpeed)
   {
     // front torque is a parame reading from sdf
-    flGasTorque = gasPercent*dPtr->frontTorque * gasMultiplier;
-    frGasTorque = gasPercent*dPtr->frontTorque * gasMultiplier;
-  }
-
-  if (fabs(dPtr->blWheelAngularVelocity * dPtr->blWheelRadius) <
-      dPtr->maxSpeed &&
-      fabs(dPtr->brWheelAngularVelocity * dPtr->brWheelRadius) <
-      dPtr->maxSpeed)
-  {
-    blGasTorque = gasPercent * dPtr->backTorque * gasMultiplier;
-    brGasTorque = gasPercent * dPtr->backTorque * gasMultiplier;
+    flGasTorque = gasPercent * dPtr->frontTorque * gasMultiplier;
+    frGasTorque = gasPercent * dPtr->frontTorque * gasMultiplier;
+    blGasTorque = gasPercent * dPtr->frontTorque * gasMultiplier;
+    brGasTorque = gasPercent * dPtr->frontTorque * gasMultiplier;
   }
 
   double throttlePower =
@@ -1026,76 +1033,58 @@ void ChongPriusPlugin::Update()
   double mpg = std::min(999.9,
       dPtr->odom / std::max(dPtr->gasConsumption, 1e-6));
 
-  if ((curTime - this->dataPtr->lastMsgTime) > .5)
+  if ((curTime - this->dataPtr->lastMsgTime) > .05)
   {
-    // node(ignition's transport) publish "/prius/pose" messages
-    this->dataPtr->posePub.Publish(
-        ignition::msgs::Convert(this->dataPtr->model->WorldPose()));
+    // publish current pose using zmq node at frequency of 20HZ
+    this->dataPtr->pos.set_x(this->dataPtr->model->WorldPose().Pos().X());
+    this->dataPtr->pos.set_y(this->dataPtr->model->WorldPose().Pos().Y());
+    this->dataPtr->pos.set_z(this->dataPtr->model->WorldPose().Pos().Z());
+    this->dataPtr->rot.set_x(this->dataPtr->model->WorldPose().Rot().X());
+    this->dataPtr->rot.set_y(this->dataPtr->model->WorldPose().Rot().Y());
+    this->dataPtr->rot.set_z(this->dataPtr->model->WorldPose().Rot().Z());
+    this->dataPtr->rot.set_w(this->dataPtr->model->WorldPose().Rot().W());
+    std::string buff;
+    this->dataPtr->currentPosition.SerializeToString(&buff);
+    s_sendmore(pose_publisher, "prius_pose");
+    s_send(pose_publisher, buff);
 
-    ignition::msgs::Double_V consoleMsg;
+    this->dataPtr->velocity.SerializeToString(&buff);
+    s_sendmore(velocity_publisher, "prius_velocity");
+    s_send(velocity_publisher, buff);
 
     // linearVel (meter/sec) = (2*PI*r) * (rad/sec).
     double linearVelLocal = (2.0 * IGN_PI * this->dataPtr->flWheelRadius) *
       ((this->dataPtr->flWheelAngularVelocity +
         this->dataPtr->frWheelAngularVelocity) * 0.5);
 
-
-        this->dataPtr->pos.set_x(this->dataPtr->model->WorldPose().Pos().X());
-    this->dataPtr->pos.set_y(this->dataPtr->model->WorldPose().Pos().Y());
-    this->dataPtr->pos.set_z(this->dataPtr->model->WorldPose().Pos().Z());
-
-    this->dataPtr->rot.set_x(this->dataPtr->model->WorldPose().Rot().X());
-    this->dataPtr->rot.set_y(this->dataPtr->model->WorldPose().Rot().Y());
-    this->dataPtr->rot.set_z(this->dataPtr->model->WorldPose().Rot().Z());
-    this->dataPtr->rot.set_w(this->dataPtr->model->WorldPose().Rot().W());
-
-
-        std::string buff;
-        this->dataPtr->currentPosition.SerializeToString(&buff);
-        s_sendmore(publisher, "demo");
-        s_send(publisher, buff);
-    // Conve-rt meter/sec to miles/hour
     linearVelLocal *= 2.23694;
     // Distance traveled in miles.
     this->dataPtr->odom += (fabs(linearVelLocal) * dt/3600);
-
     // \todo: Actually compute MPG
     mpg = 1.0 / std::max(linearVelLocal, 0.0);
-
     // Gear information: 1=drive, 2=reverse, 3=neutral
+    ignition::msgs::Double_V consoleMsg;
     if (this->dataPtr->directionState == ChongPriusPluginPrivate::FORWARD)
       consoleMsg.add_data(1.0);
     else if (this->dataPtr->directionState == ChongPriusPluginPrivate::REVERSE)
       consoleMsg.add_data(2.0);
     else if (this->dataPtr->directionState == ChongPriusPluginPrivate::NEUTRAL)
       consoleMsg.add_data(3.0);
-
     // MPH. A speedometer does not go negative.
     consoleMsg.add_data(std::max(linearVelLocal, 0.0));
-
     // MPG
     consoleMsg.add_data(mpg);
-
     // Miles
     consoleMsg.add_data(this->dataPtr->odom);
-
     // EV mode
     this->dataPtr->evMode ? consoleMsg.add_data(1.0) : consoleMsg.add_data(0.0);
-
     // Battery state
     consoleMsg.add_data(this->dataPtr->batteryCharge);
-
     //
     // node(ignition's transport) publish "/prius/console" messages
     this->dataPtr->consolePub.Publish(consoleMsg);
-
-    // Output prius car data.
-    // node(ignition's transport) publish "/prius/pose" messages
-    this->dataPtr->posePub.Publish(
-        ignition::msgs::Convert(this->dataPtr->model->WorldPose()));
-
     this->dataPtr->lastMsgTime = curTime;
-  }
+  }// if dt > curTime - lastMsgTime
 }
 
 /////////////////////////////////////////////////
