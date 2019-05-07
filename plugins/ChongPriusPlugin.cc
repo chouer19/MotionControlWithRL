@@ -1039,9 +1039,9 @@ void ChongPriusPlugin::Update()
     this->dataPtr->pos.set_x(this->dataPtr->model->WorldPose().Pos().X());
     this->dataPtr->pos.set_y(this->dataPtr->model->WorldPose().Pos().Y());
     this->dataPtr->pos.set_z(this->dataPtr->model->WorldPose().Pos().Z());
-    this->dataPtr->rot.set_x(this->dataPtr->model->WorldPose().Rot().X());
-    this->dataPtr->rot.set_y(this->dataPtr->model->WorldPose().Rot().Y());
-    this->dataPtr->rot.set_z(this->dataPtr->model->WorldPose().Rot().Z());
+    this->dataPtr->rot.set_x(this->dataPtr->model->WorldPose().Rot().Yaw());
+    this->dataPtr->rot.set_y(this->dataPtr->model->WorldPose().Rot().Pitch());
+    this->dataPtr->rot.set_z(this->dataPtr->model->WorldPose().Rot().Roll());
     this->dataPtr->rot.set_w(this->dataPtr->model->WorldPose().Rot().W());
     std::string buff;
     this->dataPtr->currentPosition.SerializeToString(&buff);

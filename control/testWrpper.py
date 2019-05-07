@@ -24,10 +24,17 @@ def enjoyPrius(args):
         #prius.control_world(False)
         #time.sleep(5)
         #print str(prius.pose())
-        #print prius.pose().position.x
+        if args.mode == 0:
+            #prius.control_prius(args.value,-prius.pose().position.y/80,0)
+            #prius.control_prius(args.value,-prius.pose().position.y/20,0)
+            prius.control_prius(args.value,0.2,0)
+        if args.mode == 1:
+            prius.control_world()
+            break
+        print prius.pose().orientation.x
         #print str(prius.collisions())
         #print prius.collisions().position.x
-        print str(prius.velocity())
+        #print str(prius.velocity())
         print '===================='
     pass
 
