@@ -5704,8 +5704,8 @@
     <include>
       <name>fire_truck_114</name>
       <pose>
-      64.139
-      85.04
+      58
+      -97.8
       5.01
       0
       0
@@ -12170,8 +12170,8 @@
     <include>
       <name>hatchback_594</name>
       <pose>
-      -17.5
-      -84.30
+      -17.3
+      -88
       5.01
       0
       0
@@ -12183,8 +12183,8 @@
     <include>
       <name>hatchback_red_595</name>
       <pose>
-      -12.5
-      -76.9
+      -12.6
+      -79
       5.01
       0
       0
@@ -12274,7 +12274,7 @@
     <include>
       <name>hatchback_602</name>
       <pose>
-      -14.00
+      -13.80
       15.00
       5.01
       0
@@ -12352,7 +12352,7 @@
     <include>
       <name>pickup_608</name>
       <pose>
-      42.5
+      42.8
       82.2
       5.01
       0
@@ -12444,7 +12444,7 @@
       <name>hatchback_615</name>
       <pose>
       -1
-      -44
+      -43.8
       5.01
       0
       0
@@ -12470,7 +12470,7 @@
       <name>hatchback_blue_617</name>
       <pose>
       32.5
-      47.5
+      47.3
       5.01
       0
       0

@@ -18,6 +18,9 @@
 // include zmq header
 #include "zmq/zhelpers.hpp"
 
+#include <iostream>
+#include <fstream>
+
 using namespace gazebo;
 
 zmq::context_t context(1);
@@ -629,6 +632,33 @@ void ChongPriusPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   this->dataPtr->updateConnection = event::Events::ConnectWorldUpdateBegin(
       std::bind(&ChongPriusPlugin::Update, this));
 
+  //this->LogVehicles();
+
+}
+
+void ChongPriusPlugin::LogVehicles(){
+    std::ofstream ofs("a.txt", std::ios::app);
+    if(ofs.good()){
+        ofs<<"Hello a.txt, I'm appending this on you.\n";
+    }
+
+    for(int i=0; i < 624; i++){
+        for(std::string type : {"pickup_","hatchback_","suv_","bus_","hatchback_blue_","hatchback_red_","fire_truck_"}){
+	    if( this->dataPtr->world->ModelByName(type+ std::to_string(i)) != NULL){
+	        gzdbg << type+ std::to_string(i) << std::endl;
+	        if(ofs.good()){
+	            auto x = this->dataPtr->world->ModelByName(type+ std::to_string(i))->WorldPose().Pos().X();
+	            auto y = this->dataPtr->world->ModelByName(type+ std::to_string(i))->WorldPose().Pos().Y();
+	            auto width = this->dataPtr->world->ModelByName(type+ std::to_string(i))->CollisionBoundingBox().Size()[0]; 
+	            auto height = this->dataPtr->world->ModelByName(type+ std::to_string(i))->CollisionBoundingBox().Size()[1];
+	            x -= width/2;
+	            y -= height/2;
+	            ofs << x << "," << y << "," << width << "," << height << "," << type << std::to_string(i) << "\n";
+	            break;
+	        }
+	    }
+	}
+    }
 }
 
 /////////////////////////////////////////////////
@@ -645,6 +675,7 @@ void ChongPriusPlugin::OnCmdVel(const ignition::msgs::Pose &_msg)
   this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
   this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
 }
+
 /////////////////////////////////////////////////
 // node(ignition's transport) subcribe "/cmd_gear" messages
 void ChongPriusPlugin::OnCmdGear(const ignition::msgs::Int32 &_msg)
@@ -1033,7 +1064,7 @@ void ChongPriusPlugin::Update()
   double mpg = std::min(999.9,
       dPtr->odom / std::max(dPtr->gasConsumption, 1e-6));
 
-  if ((curTime - this->dataPtr->lastMsgTime) > .05)
+  if ((curTime - this->dataPtr->lastMsgTime) > .025)
   {
     // publish current pose using zmq node at frequency of 20HZ
     this->dataPtr->pos.set_x(this->dataPtr->model->WorldPose().Pos().X());

@@ -59,7 +59,7 @@ def load_routes():
                     pass
                 line = f.readline()
 
-    n = 'points.road'
+    n = 'track.point'
     readfile(n)
 
     return points

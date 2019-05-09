@@ -69,6 +69,8 @@ namespace gazebo
     /// \param[in] _msg Pose message
     private: void OnCmdVel(const ignition::msgs::Pose &_msg);
 
+    private: void LogVehicles();
+
     //private: void OnContacts(ConstContactsPtr &_msg);
 
     /// \brief Command to change gear to reverse, neutral or forward (drive)
