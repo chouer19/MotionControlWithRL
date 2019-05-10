@@ -20,6 +20,9 @@ class Env(object):
         self._ImgCenter_X = 10
         self._ImgCenter_Y = 16
 
+        self._CarWidth = 2.2
+        self._CarHeight = 4.6
+
         self._PixelDensity = 10
 
         self._display = pygame.display.set_mode([self._Width,self._Height])
@@ -74,11 +77,20 @@ class Env(object):
     def vehicle(self):
         return self._vehicleBoxes
 
-    def _terminal(self, contacts, pose):
+    def _terminal(self, contacts):
         for contact in contacts.contact:
+            if ("prius_hybrid_123" not in contact.collision1) and ("prius_hybrid_123" not in contact.collision2):
+                continue
             if ("robocup_3Dsim_field_90::field::collision" not in contact.collision1) and \
-            ("robocup_3Dsim_field_90::field::collision" not in cantact.collision2):
+            ("robocup_3Dsim_field_90::field::collision" not in contact.collision2):
                 return True
+        for i in self._containedRoadID:
+            if roadContainsSelf(self.road()[self._containedRoadID[0]], self._pose) is False:
+                if roadContainsSelf(self.road()[self._containedRoadID[1]], self._pose) is False:
+                    if roadContainsSelf(self.road()[self._containedRoadID[2]], self._pose) is False:
+                        if roadContainsSelf(self.road()[self._containedRoadID[3]], self._pose) is False:
+                            print "out of road"
+                            return True
         return False
 
     def _reward(self):
@@ -121,22 +133,34 @@ class Env(object):
         for road in roads:
             pygame.draw.polygon(self._display, (0,0,0), road, 0 )
         # draw self
-        pygame.draw.rect(self._display,(0,0,255), pygame.Rect((50,160),(46,22)))
+        pygame.draw.rect(self._display,(0,0,255), pygame.Rect( (int((self._ImgCenter_X - self._CarHeight/2) *self._PixelDensity), int((self._ImgCenter_Y - self._CarWidth/2)*self._PixelDensity)), (int(self._CarHeight * self._PixelDensity),int(self._CarWidth * self._PixelDensity))))
         # draw draw vehicles
         for vehicle in vehicles:
             pygame.draw.polygon(self._display, (255,0,0), vehicle, 0 )
         pygame.display.flip()
         return self._reward()
 
-
     def render(self, contacts, pose):
         self._pose = pose
         roads = self.get_roads_polygon()
         vehicles = self.get_vehicles_polygon()
+        # draw background
+        pygame.draw.rect(self._display,(255,255,255), pygame.Rect((0,0),(self._Width, self._Height)))
         # draw road
+        for road in roads:
+            pygame.draw.polygon(self._display, (0,0,0), road, 0 )
+        # draw self
+        pygame.draw.rect(self._display,(0,0,255), pygame.Rect( (int((self._ImgCenter_X - self._CarHeight/2) *self._PixelDensity), int((self._ImgCenter_Y - self._CarWidth/2)*self._PixelDensity)), (int(self._CarHeight * self._PixelDensity),int(self._CarWidth * self._PixelDensity))))
         # draw draw vehicles
-        img = 0
-        return img, self._reward(), self._terminal()
+        for vehicle in vehicles:
+            pygame.draw.polygon(self._display, (255,0,0), vehicle, 0 )
+        pygame.display.flip()
+        image_data = pygame.surfarray.array3d(pygame.display.get_surface())
+        terminal = self._terminal(contacts)
+        reward = self._reward()
+        if terminal:
+            reward = -5
+        return image_data, reward, terminal
 
     def get_roads_polygon(self):
         polygons = []
@@ -249,10 +273,22 @@ def roadContainsBox(box, vehicle):
             return True
     return False
 
+def roadContainsSelf(box, pos):
+    if pos.position.x-pos.position.z/2 > box.X() and pos.position.x-pos.position.z/2 < box.X()+box.Width():
+        if pos.position.y-pos.orientation.w/2 > box.Y() and pos.position.y-pos.orientation.w/2 < box.Y()+box.Height():
+            if pos.position.x+pos.position.z/2 > box.X() and pos.position.x+pos.position.z/2 < box.X()+box.Width():
+                if pos.position.y-pos.orientation.w/2 > box.Y() and pos.position.y-pos.orientation.w/2 < box.Y()+box.Height():
+                    if pos.position.x+pos.position.z/2 > box.X() and pos.position.x+pos.position.z/2 < box.X()+box.Width():
+                        if pos.position.y+pos.orientation.w/2 > box.Y() and pos.position.y+pos.orientation.w/2 < box.Y()+box.Height():
+                            if pos.position.x+pos.position.z/2 > box.X() and pos.position.x+pos.position.z/2 < box.X()+box.Width():
+                                if pos.position.y-pos.orientation.w/2 > box.Y() and pos.position.y-pos.orientation.w/2 < box.Y()+box.Height():
+                                    return True
+    return False
+
 # reference point list of box to pos,
 def BoxToPolygon(box, pos):
     points = []
-    rot = kdl.Rotation.RotZ(-pos.orientation.x)
+    rot = kdl.Rotation.RotZ(-pos.orientation.x+math.pi/2)
     point = kdl.Vector(box.X() - pos.position.x,box.Y() - pos.position.y,0)
     points.append(rot*point)
     point = kdl.Vector(box.X()+box.Width() - pos.position.x,box.Y() - pos.position.y,0)

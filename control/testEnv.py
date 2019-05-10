@@ -26,7 +26,7 @@ def enjoyPrius(args):
             line = f.readline()
             if len(contents) == 3:
                 pp = GZ_pose.Pose()
-                pp.position.x, pp.position.y, pp.orientation.x = float(contents[0]),float(contents[1]),float(contents[2])
+                pp.position.x, pp.position.y, pp.orientation.x = float(contents[0]),float(contents[1]),float(contents[2]) + math.pi/2
                 poses.append(pp)
 
     #for i in range(0,90):

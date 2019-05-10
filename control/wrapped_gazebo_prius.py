@@ -91,6 +91,9 @@ class Prius():
         self._world_control = GZ_world_control.WorldControl()
 
     def pose(self):
+        return self._pose
+
+    def update_pos(self):
         return self._pos()
 
     def _pos(self):
@@ -114,8 +117,13 @@ class Prius():
                 self._speed.ParseFromString(msg)
                 break
         return self._speed
+
     def collisions(self):
+        return self._contacts
+
+    def update_collisions(self):
         return self._collisions()
+        pass
 
     def _collisions(self):
         topic = "aaa"
@@ -138,6 +146,9 @@ class Prius():
 
     def control_world(self, reset = True):
         self._control_world(reset)
+
+    def reset(self):
+        self._control_world(True)
 
     def _control_world(self, reset):
         self._world_control.reset.all = reset 

@@ -1069,11 +1069,11 @@ void ChongPriusPlugin::Update()
     // publish current pose using zmq node at frequency of 20HZ
     this->dataPtr->pos.set_x(this->dataPtr->model->WorldPose().Pos().X());
     this->dataPtr->pos.set_y(this->dataPtr->model->WorldPose().Pos().Y());
-    this->dataPtr->pos.set_z(this->dataPtr->model->WorldPose().Pos().Z());
+    this->dataPtr->pos.set_z(this->dataPtr->model->CollisionBoundingBox().Size()[0]);
     this->dataPtr->rot.set_x(this->dataPtr->model->WorldPose().Rot().Yaw());
     this->dataPtr->rot.set_y(this->dataPtr->model->WorldPose().Rot().Pitch());
     this->dataPtr->rot.set_z(this->dataPtr->model->WorldPose().Rot().Roll());
-    this->dataPtr->rot.set_w(this->dataPtr->model->WorldPose().Rot().W());
+    this->dataPtr->rot.set_w(this->dataPtr->model->CollisionBoundingBox().Size()[1]);
     std::string buff;
     this->dataPtr->currentPosition.SerializeToString(&buff);
     s_sendmore(pose_publisher, "prius_pose");
