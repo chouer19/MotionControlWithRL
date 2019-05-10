@@ -69,7 +69,7 @@ class Env(object):
                 contents = line.split('\t')
                 line = f.readline()
                 if len(contents) > 2:
-                    self._trackPoints.append(Point(float(contents[0]), float(contents[1]), float(contents[2])))
+                    self._trackPoints.append(Point(float(contents[0]), float(contents[1]), math.pi/2 + float(contents[2])))
 
     def track(self):
         return self._trackPoints
@@ -115,7 +115,7 @@ class Env(object):
                 while errorYaw < -1*math.pi:
                     errorYaw += math.pi
                 self._mark = index
-                return math.exp(-1 * abs(errorYaw)) - math.exp(abs(errorYaw) - math.pi/3*2)
+                return math.exp(-1 * abs(errorYaw)) / 8
             if loop > 11:
                 break
         return -5

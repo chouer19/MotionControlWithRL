@@ -136,20 +136,17 @@ def enjoyPrius(args):
                                         np.max(q_action1_batch[i][18:20])
                                      )  )
             train_step.run(feed_dict = {inputState: state_j_batch, target_q: target_q_batch, action:action_batch })
+        # step > OBSERVE end train_step
+        
         # save progress every 10000 iterations
         if step % 10000 == 0:
             saver.save(sess, 'saved_networks/' + GAME + '-dqn', global_step = step)
 
-        if terminal:
-            prius.reset()
-            time.sleep(0.2)
-            x_t, reward, terminal = env.render(prius.collisions(), prius.pose())
-            x_t = cv2.cvtColor(cv2.resize(x_t, (160, 160)), cv2.COLOR_BGR2GRAY)
-            ret , x_t = cv2.threshold(x_t, 1, 255, cv2.THRESH_BINARY)
-            state_t1 = np.stack((x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t), axis=2)
+        line1 = "step :====================== ",step,"======================== "
+        line3 = "reward                       ",reward,"                      "
 
         # control by frequecy of 10HZ
-        if time.time() - simTime < 0.98:
+        if (time.time() - simTime < 0.98) and (not terminal):
             continue
         simTime = time.time()
 
@@ -167,14 +164,31 @@ def enjoyPrius(args):
         if epsilon > FINAL_EPSILON and step > OBSERVE:
             epsilon -= (INITIAL_EPSILON - FINAL_EPSILON) / EXPLORE
 
-        prius.control_prius(0.2, action_angle_t, 0)
-        x_t, reward, terminal = env.render(prius.collisions(), prius.pose())
+        prius.control_prius(0.2, -1*action_angle_t, 0)
         x_t = cv2.cvtColor(cv2.resize(x_t, (160, 160)), cv2.COLOR_BGR2GRAY)
         ret , x_t = cv2.threshold(x_t, 1, 255, cv2.THRESH_BINARY)
         x_t = np.reshape(x_t, (160, 160, 1))
         state_t1 = np.append(x_t, state_t[:, :, :9], axis=2)
 
         store.append((state_t, action_array_t, reward, state_t1, terminal))
+        if terminal:
+            prius.reset()
+            time.sleep(0.2)
+            x_t, reward, terminal = env.render(prius.collisions(), prius.pose())
+            x_t = cv2.cvtColor(cv2.resize(x_t, (160, 160)), cv2.COLOR_BGR2GRAY)
+            ret , x_t = cv2.threshold(x_t, 1, 255, cv2.THRESH_BINARY)
+            state_t1 = np.stack((x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t), axis=2)
+            printRed(line1)
+            printRed(line3)
+        elif reward < 0.04:
+            printYellow(line1)
+            printYellow(line3)
+        elif reward < 0.1:
+            printCyan(line1)
+            printCyan(line3)
+        else:
+            printGreen(line1)
+            printGreen(line3)
 
         state_t = state_t1
         step += 1
