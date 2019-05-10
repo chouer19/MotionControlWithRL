@@ -33,7 +33,8 @@ ACTIONS = 20 # number of valid actions
 INITIAL_EPSILON = 0.0001 # starting value of epsilon
 INITIAL_EPSILON = 0.16 # starting value of epsilon
 #INITIAL_EPSILON = 0.2 # starting value of epsilon
-OBSERVE = 100000. # timesteps to observe before training
+OBSERVE = 50000. # timesteps to observe before training
+REPLAY_MEMORY = 50000 # number of previous transitions to remember
 EXPLORE = 3000000. # frames over which to anneal epsilon
 #EXPLORE = 2000000. # frames over which to anneal epsilon
 FINAL_EPSILON = 0.0001 # final value of epsilon
@@ -171,6 +172,8 @@ def enjoyPrius(args):
         state_t1 = np.append(x_t, state_t[:, :, :9], axis=2)
 
         store.append((state_t, action_array_t, reward, state_t1, terminal))
+        if len(store) > REPLAY_MEMORY:
+            store.popleft()
         if terminal:
             prius.reset()
             time.sleep(0.2)
