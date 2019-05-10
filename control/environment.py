@@ -115,7 +115,7 @@ class Env(object):
                 while errorYaw < -1*math.pi:
                     errorYaw += math.pi
                 self._mark = index
-                return math.exp(-1 * abs(errorYaw)) / 8
+                return (math.exp(-1 * abs(errorYaw)) - math.exp(-0.333 * math.pi)) / 8
             if loop > 11:
                 break
         return -5
