@@ -1,0 +1,5 @@
+# Hashes of file build rules.
+afd5c9e2b81bae3d6daf284be03bce60 plugins/CMakeFiles/BloomVisualPlugin_autogen
+3681520019ae02772b7edbd9da940d6b plugins/CMakeFiles/ChongPriusPlugin_autogen
+1786446f540ff3e65c499a440535d54f plugins/CMakeFiles/LensFlareVisualPlugin_autogen
+952636327505a5ad59d9ae7b90d03ad5 plugins/CMakeFiles/PriusHybridPlugin_autogen
