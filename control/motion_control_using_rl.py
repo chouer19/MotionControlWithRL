@@ -31,8 +31,9 @@ def handler(signum, frame):
 GAME = 'angry-car' # the name of the game being played for log files
 ACTIONS = 20 # number of valid actions
 INITIAL_EPSILON = 0.0001 # starting value of epsilon
-INITIAL_EPSILON = 0.16 # starting value of epsilon
-#INITIAL_EPSILON = 0.2 # starting value of epsilon
+#INITIAL_EPSILON = 0.16 # starting value of epsilon
+INITIAL_EPSILON = 0.27 # starting value of epsilon
+OBSERVE = 50000. # timesteps to observe before training
 OBSERVE = 50000. # timesteps to observe before training
 REPLAY_MEMORY = 50000 # number of previous transitions to remember
 EXPLORE = 3000000. # frames over which to anneal epsilon
@@ -90,6 +91,11 @@ def enjoyPrius(args):
     else:
         print("Could not find old network weights")
 
+    x_t, reward, terminal = env.render(prius.collisions(), prius.pose())
+    while terminal:
+        prius.reset()
+        time.sleep(0.2)
+        x_t, reward, terminal = env.render(prius.collisions(), prius.pose())
     # control prius by pedal percent 0.2, hand steering is 0, brake pedal is 0
     prius.control_prius(0.2, 0, 0)
     x_t, reward, terminal = env.render(prius.collisions(), prius.pose())
@@ -120,9 +126,9 @@ def enjoyPrius(args):
             target_q_batch = []
             q_action1_batch = outputQ.eval(feed_dict = {inputState: state_j1_batch})
             for i in range(0, len(minibatch)):
-                terminal = minibatch[i][4]
-                if terminal:
-                    target_q_batch.append(reward_batch)
+                terminal_j = minibatch[i][4]
+                if terminal_j:
+                    target_q_batch.append(reward_batch[i])
                 else:
                     target_q_batch.append(reward_batch[i] + GAMMA * \
                                       ( np.max(q_action1_batch[i][0:2] ) + \
@@ -136,18 +142,18 @@ def enjoyPrius(args):
                                         np.max(q_action1_batch[i][16:18]) +\
                                         np.max(q_action1_batch[i][18:20])
                                      )  )
-            train_step.run(feed_dict = {inputState: state_j_batch, target_q: target_q_batch, action:action_batch })
-        # step > OBSERVE end train_step
-        
+            train_step.run(feed_dict = {
+                target_q: target_q_batch,
+                action: action_batch,
+                inputState: state_j_batch }
+                )
         # save progress every 10000 iterations
         if step % 10000 == 0:
             saver.save(sess, 'saved_networks/' + GAME + '-dqn', global_step = step)
-
-        line1 = "step :====================== ",step,"======================== "
-        line3 = "reward                       ",reward,"                      "
+        # step > OBSERVE end train_step
 
         # control by frequecy of 10HZ
-        if (time.time() - simTime < 0.98) and (not terminal):
+        if (time.time() - simTime < 0.098) and (not terminal):
             continue
         simTime = time.time()
 
@@ -157,30 +163,26 @@ def enjoyPrius(args):
         ## epsilon-greedy policy
         action_array_t = np.zeros([ACTIONS])
         action_angle_t = 0
+        # scale down epsilon
+        if epsilon > FINAL_EPSILON and step > OBSERVE:
+            epsilon -= (INITIAL_EPSILON - FINAL_EPSILON) / EXPLORE
         if random.random() < epsilon:
             action_array_t, action_angle_t = getRandomAction()
         else:
             action_array_t, action_angle_t = getAction(qV_t)
-        # scale down epsilon
-        if epsilon > FINAL_EPSILON and step > OBSERVE:
-            epsilon -= (INITIAL_EPSILON - FINAL_EPSILON) / EXPLORE
 
         prius.control_prius(0.2, -1*action_angle_t, 0)
         x_t = cv2.cvtColor(cv2.resize(x_t, (160, 160)), cv2.COLOR_BGR2GRAY)
         ret , x_t = cv2.threshold(x_t, 1, 255, cv2.THRESH_BINARY)
         x_t = np.reshape(x_t, (160, 160, 1))
         state_t1 = np.append(x_t, state_t[:, :, :9], axis=2)
-
         store.append((state_t, action_array_t, reward, state_t1, terminal))
         if len(store) > REPLAY_MEMORY:
             store.popleft()
+        # print on-time reward
+        line1 = "step :====================== ",step,"======================== "
+        line3 = "reward                       ",reward,"                      "
         if terminal:
-            prius.reset()
-            time.sleep(0.2)
-            x_t, reward, terminal = env.render(prius.collisions(), prius.pose())
-            x_t = cv2.cvtColor(cv2.resize(x_t, (160, 160)), cv2.COLOR_BGR2GRAY)
-            ret , x_t = cv2.threshold(x_t, 1, 255, cv2.THRESH_BINARY)
-            state_t1 = np.stack((x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t), axis=2)
             printRed(line1)
             printRed(line3)
         elif reward < 0.04:
@@ -192,9 +194,17 @@ def enjoyPrius(args):
         else:
             printGreen(line1)
             printGreen(line3)
-
+        # if terminal, restart
+        if terminal:
+            prius.reset()
+            time.sleep(0.2)
+            x_t, reward, terminal = env.render(prius.collisions(), prius.pose())
+            x_t = cv2.cvtColor(cv2.resize(x_t, (160, 160)), cv2.COLOR_BGR2GRAY)
+            ret , x_t = cv2.threshold(x_t, 1, 255, cv2.THRESH_BINARY)
+            state_t1 = np.stack((x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t, x_t), axis=2)
         state_t = state_t1
         step += 1
+
 
 def getAction(qv):
     action_array = np.zeros([ACTIONS])

@@ -1,2 +1,6 @@
-model_checkpoint_path: "angry-car-dqn-2450000"
-all_model_checkpoint_paths: "angry-car-dqn-2450000"
+model_checkpoint_path: "angry-car-dqn-50000"
+all_model_checkpoint_paths: "angry-car-dqn-10000"
+all_model_checkpoint_paths: "angry-car-dqn-20000"
+all_model_checkpoint_paths: "angry-car-dqn-30000"
+all_model_checkpoint_paths: "angry-car-dqn-40000"
+all_model_checkpoint_paths: "angry-car-dqn-50000"

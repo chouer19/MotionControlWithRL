@@ -83,6 +83,7 @@ class Env(object):
                 continue
             if ("robocup_3Dsim_field_90::field::collision" not in contact.collision1) and \
             ("robocup_3Dsim_field_90::field::collision" not in contact.collision2):
+                print "collision"
                 return True
         for i in self._containedRoadID:
             if roadContainsSelf(self.road()[self._containedRoadID[0]], self._pose) is False:
