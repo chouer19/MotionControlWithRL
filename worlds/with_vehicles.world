@@ -5691,7 +5691,7 @@
     <include>
       <name>fire_truck_622</name>
       <pose>
-      60
+      80
       98
       5.01
       0
@@ -5704,7 +5704,7 @@
     <include>
       <name>fire_truck_114</name>
       <pose>
-      58
+      75
       -97.8
       5.01
       0
@@ -10562,7 +10562,7 @@
       <name>bus_623</name>
       <pose>
       122
-      70
+      90
       5.01
       0
       0
@@ -10575,7 +10575,7 @@
     <include>
       <name>bus_473</name>
       <pose>
-      112
+      114.4
       -70
       5.01
       0
@@ -12196,7 +12196,7 @@
     <include>
       <name>hatchback_red_596</name>
       <pose>
-      42.5
+      43.5
       -73.0
       5.01
       0
@@ -12222,8 +12222,8 @@
     <include>
       <name>pickup_598</name>
       <pose>
-      -17
-      -22
+      -16.7
+      -29
       5.01
       0
       0
@@ -12261,8 +12261,8 @@
     <include>
       <name>pickup_601</name>
       <pose>
-      47.6
-      -34.8
+      47
+      -24.8
       5.01
       0
       0
@@ -12274,7 +12274,7 @@
     <include>
       <name>hatchback_602</name>
       <pose>
-      -13.80
+      -13.30
       15.00
       5.01
       0
@@ -12287,8 +12287,8 @@
     <include>
       <name>hatchback_red_603</name>
       <pose>
-      -12.5
-      35.5
+      -13.0
+      25.5
       5.01
       0
       0
@@ -12300,7 +12300,7 @@
     <include>
       <name>hatchback_blue_604</name>
       <pose>
-      43
+      43.5
       26
       5.01
       0
@@ -12354,8 +12354,8 @@
     <include>
       <name>pickup_608</name>
       <pose>
-      42.8
-      82.2
+      43.4
+      77.2
       5.01
       0
       0
@@ -12394,7 +12394,7 @@
       <name>suv_611</name>
       <pose>
       -31
-      -42.5
+      -43
       5.01
       0
       0
@@ -12432,7 +12432,7 @@
     <include>
       <name>hatchback_red_614</name>
       <pose>
-      35
+      30
       -47
       5.01
       0
@@ -12445,7 +12445,7 @@
     <include>
       <name>hatchback_615</name>
       <pose>
-      -1
+      9
       -43.8
       5.01
       0
@@ -12458,7 +12458,7 @@
     <include>
       <name>suv_616</name>
       <pose>
-      24.00
+      18.00
       42.5
       5.01
       0
@@ -12511,7 +12511,7 @@
       <name>suv_620</name>
       <pose>
       71.6
-      42.5
+      42.8
       5.01
       0
       0
@@ -12524,7 +12524,7 @@
       <name>hatchback_blue_621</name>
       <pose>
       85.00
-      47.5
+      47.0
       5.01
       0
       0

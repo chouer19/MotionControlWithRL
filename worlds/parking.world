@@ -104,6 +104,12 @@
       <width>7.4</width>
       <point>-45 -103.7 5.02</point>
       <point>-45 104.2 5.02</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
     </road>
 
     <road name="road_y_2">
@@ -148,6 +154,12 @@
       <width>7.4</width>
       <point>120 -103.7 5.02</point>
       <point>120 104.2 5.02</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
     </road>
     
 
@@ -155,6 +167,12 @@
       <width>8.4</width>
       <point>-41.3 -100 5.0249999999999995</point>
       <point>116.3 -100 5.0249999999999995</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
     </road>
     
 
@@ -175,6 +193,12 @@
       <width>8.4</width>
       <point>-41.3 0 5.0249999999999995</point>
       <point>116.3 0 5.0249999999999995</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
     </road>
 
     <road name="road_x_4">
@@ -194,6 +218,12 @@
       <width>8.4</width>
       <point>-41.3 100 5.0249999999999995</point>
       <point>116.3 100 5.0249999999999995</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
     </road>
 
     <!-- Sidewalks -->
@@ -5385,32 +5415,6 @@
       <uri>model://robocup_3Dsim_field</uri>
     </include>
 
-    <include>
-      <name>bus_91</name>
-      <pose>
-      133.9
-      -67.16
-      5.01
-      0
-      0
-      -1.67
-      </pose>
-      <uri>model://bus</uri>
-    </include>
-
-    <include>
-      <name>bus_92</name>
-      <pose>
-      133.9
-      -63.14
-      5.01
-      0
-      0
-      -1.67
-      </pose>
-      <uri>model://bus</uri>
-    </include>
-
     <!-- North road -->
     
     <include>
@@ -5687,46 +5691,6 @@
       </pose>
       <uri>model://fire_station</uri>
     </include>
-
-    <include>
-      <name>fire_truck_622</name>
-      <pose>
-      60
-      98
-      5.01
-      0
-      0
-      1.57
-      </pose>
-      <uri>model://fire_truck</uri>
-    </include>
-
-    <include>
-      <name>fire_truck_114</name>
-      <pose>
-      58
-      -97.8
-      5.01
-      0
-      0
-      1.57
-      </pose>
-      <uri>model://fire_truck</uri>
-    </include>
-
-    <include>
-      <name>fire_truck_115</name>
-      <pose>
-      65.098
-      90.435
-      5.01
-      0
-      0
-      1.34
-      </pose>
-      <uri>model://fire_truck</uri>
-    </include>
-
 
     <include>
       <name>house_1_116</name>
@@ -6086,20 +6050,6 @@
 </model>
 
     <include>
-      <name>suv_139</name>
-      <pose>
-      61.9
-      -12.4
-      5.01
-      0
-      0
-      0
-      </pose>
-      <uri>model://suv</uri>
-    </include>
-
-
-    <include>
       <name>apartment_140</name>
       <pose>
       87.36
@@ -6281,32 +6231,6 @@
     </visual>
   </link>
 </model>
-
-    <include>
-      <name>suv_150</name>
-      <pose>
-      86.8
-      -60.0
-      5.01
-      0
-      0
-      1.5707963267948966
-      </pose>
-      <uri>model://suv</uri>
-    </include>
-
-    <include>
-      <name>hatchback_151</name>
-      <pose>
-      84.24
-      -60.0
-      5.01
-      0
-      0
-      1.5707963267948966
-      </pose>
-      <uri>model://hatchback</uri>
-    </include>
 
     <include>
       <name>fire_hydrant_152</name>
@@ -9606,19 +9530,6 @@
     </include>
 
     <include>
-      <name>hatchback_blue_401</name>
-      <pose>
-      9.27
-      -85.5
-      5.01
-      0
-      0
-      0
-      </pose>
-      <uri>model://hatchback_blue</uri>
-    </include>
-
-    <include>
       <name>fire_hydrant_402</name>
       <pose>
       -10.8
@@ -9750,19 +9661,6 @@
       -1.57
       </pose>
       <uri>model://house_1</uri>
-    </include>
-
-    <include>
-      <name>pickup_412</name>
-      <pose>
-      -36.72
-      21.02
-      5.01
-      0
-      0
-      -1.57
-      </pose>
-      <uri>model://pickup</uri>
     </include>
 
     <include>
@@ -10490,7 +10388,6 @@
       </pose>
       <uri>model://drc_practice_angled_barrier_45</uri>
     </include>
-
     <include>
       <name>drc_practice_orange_jersey_barrier_468</name>
       <pose>
@@ -10558,45 +10455,6 @@
       <uri>model://pier</uri>
     </include>
 
-    <include>
-      <name>bus_623</name>
-      <pose>
-      122
-      70
-      5.01
-      0
-      0
-      3.14
-      </pose>
-      <uri>model://bus</uri>
-    </include>
-
-
-    <include>
-      <name>bus_473</name>
-      <pose>
-      112
-      -70
-      5.01
-      0
-      0
-      3.14
-      </pose>
-      <uri>model://bus</uri>
-    </include>
-
-    <road name="sandy_path">
-      <width>17.9</width>
-      <point>-73 -47.96 5.02</point>
-      <point>-73 2.9600000000000004 5.02</point>
-
-      <material>
-        <script>
-          <uri>file://media/materials/scripts/gazebo.material</uri>
-          <name>Gazebo/Residential</name>
-        </script>
-      </material>
-    </road>
 
     <!-- Stop lights -->
 
@@ -12166,385 +12024,241 @@
       <uri>model://telephone_pole</uri>
     </include>
 
-    <!-- Parallel-parked cars -->
+    <road name="sandy_path">
+      <!--
+      <width>17.9</width>
+      <point>-73 -47.96 5.02</point>
+      <point>-73 2.9600000000000004 5.02</point>
+      -->
+      <width>24</width>
+      <point>-74 -47.96 5.02</point>
+      <point>-74 2.9600000000000004 5.02</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
+    </road>
     <include>
-      <name>hatchback_594</name>
-      <pose>
-      -17.3
-      -88
-      5.01
-      0
-      0
-      1.5707963267948966
-      </pose>
-      <uri>model://hatchback</uri>
+      <name>parking_barrier_140</name>
+      <pose> -64.70001 -39.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_101</name>
+      <pose> -64.70001 -37.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_102</name>
+      <pose> -64.70001 -35.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_103</name>
+      <pose> -64.70001 -33.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_104</name>
+      <pose> -64.70001 -31.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_105</name>
+      <pose> -64.70001 -29.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_106</name>
+      <pose> -64.70001 -27.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_107</name>
+      <pose> -65.40001 -25.7000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_108</name>
+      <pose> -67.40001 -25.7000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_109</name>
+      <pose> -69.40001 -25.7000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_110</name>
+      <pose> -71.40001 -25.7000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_111</name>
+      <pose> -73.40001 -25.7000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_112</name>
+      <pose> -75.40001 -25.7000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_113</name>
+      <pose> -77.40001 -25.7000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_114</name>
+      <pose> -79.40001 -25.7000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_115</name>
+      <pose> -81.40001 -25.7000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_116</name>
+      <pose> -83.40001 -25.7000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_117</name>
+      <pose> -65.40001 -40.3000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_118</name>
+      <pose> -67.30001 -40.3000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_119</name>
+      <pose> -69.20001 -40.3000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_120</name>
+      <pose> -71.10001 -40.3000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
     </include>
 
     <include>
-      <name>hatchback_red_595</name>
-      <pose>
-      -12.6
-      -79
-      5.01
-      0
-      0
-      1.5707963267948966
-      </pose>
-      <uri>model://hatchback_red</uri>
+      <name>parking_barrier_121</name>
+      <pose> -71.70401 -41.6000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_122</name>
+      <pose> -71.70401 -43.5000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_123</name>
+      <pose> -71.70401 -45.4000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_cone_124</name>
+      <pose> -72.32 -46.300001 5.02 0 0 0</pose>
+      <uri>model://construction_cone</uri>
+    </include>
+    <include>
+      <name>parking_barrier_125</name>
+      <pose> -73.55001 -46.3000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_cone_126</name>
+      <pose> -74.72 -46.300001 5.02 0 0 0</pose>
+      <uri>model://construction_cone</uri>
+    </include>
+    <include>
+      <name>parking_barrier_127</name>
+      <pose> -75.30401 -41.6000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_128</name>
+      <pose> -75.30401 -43.5000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
+    </include>
+    <include>
+      <name>parking_barrier_129</name>
+      <pose> -75.30401 -45.4000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
     </include>
 
     <include>
-      <name>hatchback_red_596</name>
-      <pose>
-      42.5
-      -73.0
-      5.01
-      0
-      0
-      -1.5707963267948966
-      </pose>
-      <uri>model://hatchback_red</uri>
+      <name>parking_barrier_130</name>
+      <pose> -75.90001 -40.3000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
     </include>
-
     <include>
-      <name>pickup_597</name>
-      <pose>
-      47.5
-      -88.6
-      5.01
-      0
-      0
-      -1.5707963267948966
-      </pose>
-      <uri>model://pickup</uri>
+      <name>parking_barrier_131</name>
+      <pose> -77.80001 -40.3000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
     </include>
-
     <include>
-      <name>pickup_598</name>
-      <pose>
-      -17
-      -22
-      5.01
-      0
-      0
-      1.5707963267948966
-      </pose>
-      <uri>model://pickup</uri>
+      <name>parking_barrier_132</name>
+      <pose> -79.80001 -40.3000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
     </include>
-
     <include>
-      <name>pickup_599</name>
-      <pose>
-      -12.5
-      -13.8
-      5.01
-      0
-      0
-      1.5707963267948966
-      </pose>
-      <uri>model://pickup</uri>
+      <name>parking_barrier_133</name>
+      <pose> -81.80001 -40.3000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
     </include>
-
     <include>
-      <name>hatchback_red_600</name>
-      <pose>
-      42.5
-      -30.3
-      5.01
-      0
-      0
-      -1.5707963267948966
-      </pose>
-      <uri>model://hatchback_red</uri>
+      <name>parking_barrier_134</name>
+      <pose> -83.80001 -40.3000001 5.02 0 0 1.57 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
     </include>
-
     <include>
-      <name>pickup_601</name>
-      <pose>
-      47.6
-      -34.8
-      5.01
-      0
-      0
-      -1.5707963267948966
-      </pose>
-      <uri>model://pickup</uri>
+      <name>parking_barrier_135</name>
+      <pose> -85.30001 -39.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
     </include>
-
     <include>
-      <name>hatchback_602</name>
-      <pose>
-      -13.80
-      15.00
-      5.01
-      0
-      0
-      1.5707963267948966
-      </pose>
-      <uri>model://hatchback</uri>
+      <name>parking_barrier_136</name>
+      <pose> -85.30001 -37.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
     </include>
-
     <include>
-      <name>hatchback_red_603</name>
-      <pose>
-      -12.5
-      35.5
-      5.01
-      0
-      0
-      1.5707963267948966
-      </pose>
-      <uri>model://hatchback_red</uri>
+      <name>parking_barrier_137</name>
+      <pose> -85.30001 -35.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
     </include>
-
     <include>
-      <name>hatchback_blue_604</name>
-      <pose>
-      43
-      26
-      5.01
-      0
-      0
-      -1.5707963267948966
-      </pose>
-      <uri>model://hatchback_blue</uri>
+      <name>parking_barrier_138</name>
+      <pose> -85.30001 -33.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
     </include>
-
-    <!--
     <include>
-      <name>pickup_605</name>
-      <pose>
-      47.000
-      9.00
-      5.01
-      0
-      0
-      -1.5707963267948966
-      </pose>
-      <uri>model://pickup</uri>
+      <name>parking_barrier_139</name>
+      <pose> -85.30001 -31.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
     </include>
--->
-
     <include>
-      <name>hatchback_606</name>
-      <pose>
-      -17.5
-      74.6
-      5.01
-      0
-      0
-      1.5707963267948966
-      </pose>
-      <uri>model://hatchback</uri>
+      <name>parking_barrier_140</name>
+      <pose> -85.30001 -29.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_white_jersey_barrier</uri>
     </include>
-
     <include>
-      <name>hatchback_red_607</name>
-      <pose>
-      -12.5
-      64
-      5.01
-      0
-      0
-      1.5707963267948966
-      </pose>
-      <uri>model://hatchback_red</uri>
+      <name>parking_barrier_141</name>
+      <pose> -85.30001 -27.00000001 5.02 0 0 0 </pose>
+      <uri>model://drc_practice_orange_jersey_barrier</uri>
     </include>
-
-    <include>
-      <name>pickup_608</name>
-      <pose>
-      42.8
-      82.2
-      5.01
-      0
-      0
-      -1.5707963267948966
-      </pose>
-      <uri>model://pickup</uri>
-    </include>
-
-    <include>
-      <name>pickup_609</name>
-      <pose>
-      47.5
-      61.8
-      5.01
-      0
-      0
-      -1.5707963267948966
-      </pose>
-      <uri>model://pickup</uri>
-    </include>
-
-    <include>
-      <name>hatchback_red_610</name>
-      <pose>
-      -38.3
-      -47.5
-      5.01
-      0
-      0
-      0
-      </pose>
-      <uri>model://hatchback_red</uri>
-    </include>
-
-    <include>
-      <name>suv_611</name>
-      <pose>
-      -31
-      -42.5
-      5.01
-      0
-      0
-      0
-      </pose>
-      <uri>model://suv</uri>
-    </include>
-
-    <include>
-      <name>suv_612</name>
-      <pose>
-      -28.4
-      42.5
-      5.01
-      0
-      0
-      3.141592653589793
-      </pose>
-      <uri>model://suv</uri>
-    </include>
-
-    <include>
-      <name>hatchback_613</name>
-      <pose>
-      -35.70
-      47.5
-      5.01
-      0
-      0
-      3.141592653589793
-      </pose>
-      <uri>model://hatchback</uri>
-    </include>
-
-    <include>
-      <name>hatchback_red_614</name>
-      <pose>
-      35
-      -47
-      5.01
-      0
-      0
-      0
-      </pose>
-      <uri>model://hatchback_red</uri>
-    </include>
-
-    <include>
-      <name>hatchback_615</name>
-      <pose>
-      -1
-      -43.8
-      5.01
-      0
-      0
-      0
-      </pose>
-      <uri>model://hatchback</uri>
-    </include>
-
-    <include>
-      <name>suv_616</name>
-      <pose>
-      24.00
-      42.5
-      5.01
-      0
-      0
-      3.141592653589793
-      </pose>
-      <uri>model://suv</uri>
-    </include>
-
-    <include>
-      <name>hatchback_blue_617</name>
-      <pose>
-      32.5
-      47.3
-      5.01
-      0
-      0
-      3.141592653589793
-      </pose>
-      <uri>model://hatchback_blue</uri>
-    </include>
-
-    <include>
-      <name>hatchback_618</name>
-      <pose>
-      76.2
-      -47.5
-      5.01
-      0
-      0
-      0
-      </pose>
-      <uri>model://hatchback</uri>
-    </include>
-
-    <include>
-      <name>pickup_619</name>
-      <pose>
-      77.7
-      -42.5
-      5.01
-      0
-      0
-      0
-      </pose>
-      <uri>model://pickup</uri>
-    </include>
-
-    <include>
-      <name>suv_620</name>
-      <pose>
-      71.6
-      42.5
-      5.01
-      0
-      0
-      3.141592653589793
-      </pose>
-      <uri>model://suv</uri>
-    </include>
-
-    <include>
-      <name>hatchback_blue_621</name>
-      <pose>
-      85.00
-      47.5
-      5.01
-      0
-      0
-      3.141592653589793
-      </pose>
-      <uri>model://hatchback_blue</uri>
-    </include>
-
-    <!-- People -->
-    <!-- Prius -->
 
     <include>
       <name>prius_hybrid_123</name>
       <!--<pose> -40 -1.9 5.01 0 0 1.57 </pose>-->
-      <pose> 27 -1.9 5.01 0 0 1.57 </pose>
-      <!--
-      <pose> 35 -1.9 5.01 0 0 1.57 </pose>
-      -->
+      <pose> -72 -29 5.01 0 0 3.0 </pose>
       <uri>model://my_prius</uri>
-      <plugin name="prius" filename="libChongPriusPlugin.so">
+      <plugin name="prius" filename="libChongPriusPlugin_reverse.so">
         <chassis>prius_hybrid::chassis</chassis>
         <front_left_wheel>prius_hybrid::front_left_combined_joint</front_left_wheel>
         <front_right_wheel>prius_hybrid::front_right_combined_joint</front_right_wheel>
